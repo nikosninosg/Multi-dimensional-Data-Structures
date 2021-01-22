@@ -1,5 +1,5 @@
 import pandas as pd
-import QuadTree
+from quad_tree import QuadTree
 
 
 def read_data():
