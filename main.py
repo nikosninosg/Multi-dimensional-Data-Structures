@@ -1,4 +1,5 @@
 import pandas as pd
+import QuadTree
 
 
 def read_data():
@@ -10,3 +11,4 @@ def read_data():
 if __name__ == '__main__':
     df = read_data()
     print(df[0:3])
+    QuadTree.run(df[0:100000])  # it runs well with 10^5 items and it runs ok with 10^6 items
