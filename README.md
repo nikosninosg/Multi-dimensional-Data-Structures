@@ -1,6 +1,6 @@
 # Multi-dimensional-Data-Structures
 
-K-D trees, Quad Trees και 2D Range Trees: 2D kNN Queries Implementation.
+**K-D trees, Quad Trees και 2D Range Trees: 2D kNN Queries Implementation.**
 
 Data:
 The train and test dataset are split based on time, and the public/private leaderboard in the test data are split randomly. There is no concept of a person in this dataset. All the row_id's are events, not people. 
