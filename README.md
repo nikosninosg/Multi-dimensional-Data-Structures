@@ -9,11 +9,11 @@ Note: Some of the columns, such as time and accuracy, are intentionally left vag
 
 File descriptions:
 1. train.csv, test.csv 
-  - row_id: id of the check-in event
-  - x y: coordinates
-  - accuracy: location accuracy 
-  - time: timestamp
-  - place_id: id of the business, this is the target you are predicting
+    - row_id: id of the check-in event
+    - x y: coordinates
+    - accuracy: location accuracy 
+    - time: timestamp
+    - place_id: id of the business, this is the target you are predicting
 
 2. train_x_y.csv
-  - x y: coordinates
+    - x y: coordinates
