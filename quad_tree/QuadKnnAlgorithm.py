@@ -1,7 +1,7 @@
 from math import sqrt
 import quads
-from LocalQuadTree import LocalQuadTree
-from Circle import Circle
+from quad_tree.LocalQuadTree import LocalQuadTree
+from quad_tree.Circle import Circle
 
 
 class QuadKnnAlgorithm:

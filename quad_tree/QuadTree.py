@@ -1,11 +1,12 @@
 import time
 from math import sqrt
 import quads
-from Circle import Circle
 from matplotlib import pyplot as plt
-import QuadTreeStructure
-from QuadKnnAlgorithm import QuadKnnAlgorithm
-from LocalQuadTree import LocalQuadTree
+from quad_tree.Circle import Circle
+import quad_tree.QuadTreeStructure
+from quad_tree.QuadKnnAlgorithm import QuadKnnAlgorithm
+from quad_tree.LocalQuadTree import LocalQuadTree
+
 
 def run(df):
     x = quads.Point(5, 5)
