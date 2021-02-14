@@ -1,3 +1,4 @@
+import time
 from math import sqrt
 import quads
 from quad_tree.LocalQuadTree import LocalQuadTree
@@ -5,7 +6,6 @@ from quad_tree.Circle import Circle
 
 
 class QuadKnnAlgorithm:
-
     tree: LocalQuadTree
     x: quads.Point
     k: int
@@ -29,14 +29,46 @@ class QuadKnnAlgorithm:
         self.nn_list = []
 
         while len(self.stack) > 0:
-            self.process(current_node.ll)
-            self.process(current_node.ul)
-            self.process(current_node.lr)
-            self.process(current_node.ur)
+            selected_node = None
+            b = True
+
+            if b:
+                if current_node.ll.contains_point(self.x) and b:
+                    selected_node = current_node.ll
+                    b = False
+                else:
+                    self.process(current_node.ll)
+
+                if current_node.ul.contains_point(self.x) and b:
+                    selected_node = current_node.ul
+                    b = False
+                else:
+                    self.process(current_node.ul)
+
+                if current_node.lr.contains_point(self.x) and b:
+                    selected_node = current_node.lr
+                    b = False
+                else:
+                    self.process(current_node.lr)
+
+                if current_node.ur.contains_point(self.x) and b:
+                    selected_node = current_node.ur
+                    b = False
+                else:
+                    self.process(current_node.ur)
+
+                self.process(selected_node)
+
+            else:
+                self.process(current_node.ll)
+                self.process(current_node.ul)
+                self.process(current_node.lr)
+                self.process(current_node.ur)
 
             current_node = self.stack.pop()
             self.i = self.i + 1
 
+        print(self.i)
         return self.nn_list
 
     def process(self, node: quads.QuadNode):
@@ -77,7 +109,7 @@ class QuadKnnAlgorithm:
     def nodeInCircle(self, node):
         half_height = node.height / 2
         half_width = node.width / 2
-        half_diagonal = sqrt(half_height**2 + half_width**2)
+        half_diagonal = sqrt(half_height ** 2 + half_width ** 2)
         approximate_dist = half_diagonal + self.c.radius
         return quads.euclidean_distance(self.c.center, node.center) <= approximate_dist
 

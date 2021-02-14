@@ -9,7 +9,7 @@ from quad_tree.LocalQuadTree import LocalQuadTree
 
 
 def run(df):
-    x = quads.Point(5, 5)
+    x = quads.Point(5.1, 5.1)
     k = 4
 
     tree = LocalQuadTree((5, 5), 10, 10)
@@ -35,5 +35,4 @@ def run(df):
     print(dt)
     print(list2)
     print("_________________")
-
 
