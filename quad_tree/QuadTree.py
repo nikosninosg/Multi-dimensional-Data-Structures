@@ -8,10 +8,7 @@ from quad_tree.QuadKnnAlgorithm import QuadKnnAlgorithm
 from quad_tree.LocalQuadTree import LocalQuadTree
 
 
-def run(df):
-    x = quads.Point(5.1, 5.1)
-    k = 4
-
+def run(df, x: quads.Point, k: int):
     tree = LocalQuadTree((5, 5), 10, 10)
     for index, row in df.iterrows():
         tree.insert(quads.Point(row['x'], row['y'], data=row['row_id']))

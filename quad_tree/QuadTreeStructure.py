@@ -1,4 +1,3 @@
-
 from collections import namedtuple, deque
 from random import randint
 import sys

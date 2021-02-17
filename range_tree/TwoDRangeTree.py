@@ -1,3 +1,5 @@
+from collections import deque
+
 from range_tree.RangeTree import *
 
 
@@ -61,3 +63,31 @@ class TwoDRangeTree:
                     current_node.tree = RangeTree()
                     current_node.tree.insert(point)
                     current_node.tree.insert(old_point)
+
+    def query(self, x1, x2, y1, y2):
+        split_node, visited_nodes = self.get_split_node(x1, x2)
+        # print(split_node.isLeaf())
+        if split_node is None:
+            return []
+        if split_node.isLeaf():
+            return [[split_node.range_point], visited_nodes]
+        points = split_node.tree.query(y1, y2)
+        return [[point for point in points if x1 <= point.x <= x2 and y1 <= point.y <= y2], visited_nodes]
+
+    def get_split_node(self, r1, r2):
+        visited_nodes = deque()
+        if r1 > r2:
+            return [None, visited_nodes]
+        current_node = self.root
+        visited_nodes.append(current_node)
+        while current_node is not None and not current_node.isLeaf():
+            if r1 <= current_node.w <= r2:
+                return [current_node, visited_nodes]
+            else:
+                if r1 > current_node.w:
+                    current_node = current_node.r_child
+                    visited_nodes.append(current_node)
+                elif r2 < current_node.w:
+                    current_node = current_node.l_child
+                    visited_nodes.append(current_node)
+        return [current_node, visited_nodes]

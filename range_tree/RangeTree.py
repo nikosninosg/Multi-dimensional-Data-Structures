@@ -1,3 +1,5 @@
+from collections import deque
+
 from range_tree.RangePoint import RangePoint
 
 
@@ -46,6 +48,31 @@ class RangeTree:
                     current_node.addChild(old_point, 'y')
                     current_node.addChild(point, 'y')
 
+    def query(self, r1, r2):
+        split_node, visited_nodes = self.get_split_node(r1, r2)
+        if split_node is None:
+            return []
+        points = split_node.get_all_points()
+        return [point for point in points if r1 <= point.y <= r2]
+
+    def get_split_node(self, r1, r2):
+        visited_nodes = deque()
+        if r1 > r2:
+            return [None, visited_nodes]
+        current_node = self.root
+        visited_nodes.append(current_node)
+        while current_node is not None and not current_node.isLeaf():
+            if r1 <= current_node.w <= r2:
+                return [current_node, visited_nodes]
+            else:
+                if r1 > current_node.w:
+                    current_node = current_node.r_child
+                    visited_nodes.append(current_node)
+                elif r2 < current_node.w:
+                    current_node = current_node.l_child
+                    visited_nodes.append(current_node)
+        return [current_node, visited_nodes]
+
 
 class RangeNode:
 
@@ -77,6 +104,17 @@ class RangeNode:
             else:
                 self.r_child = RangeLeaf(point)
 
+    def get_all_points(self):
+        points = []
+        for child in [self.l_child, self.r_child]:
+            if child is not None and child.isLeaf():
+                points.append(child.range_point)
+            elif child is not None and not child.isLeaf():
+                new_points = child.get_all_points()
+                for point in new_points:
+                    points.append(point)
+        return points
+
     def printNode(self):
         for child in [self.l_child, self.r_child]:
             if child is not None and child.isLeaf():
@@ -95,3 +133,6 @@ class RangeLeaf(RangeNode):
 
     def isLeaf(self):
         return True
+
+    def get_all_points(self):
+        return [self.range_point]

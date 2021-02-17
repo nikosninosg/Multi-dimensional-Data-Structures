@@ -1,4 +1,3 @@
-import time
 from math import sqrt
 import quads
 from quad_tree.LocalQuadTree import LocalQuadTree
