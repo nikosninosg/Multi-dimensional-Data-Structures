@@ -23,7 +23,7 @@ class QuadKnnAlgorithm:
         self.i = 0
 
     def nn_query(self):
-        current_node = self.tree.getRoot()
+        current_node = self.tree.get_root()
         self.stack = [current_node]
         self.nn_list = []
 

@@ -10,6 +10,57 @@ class TwoDRangeTree:
         # we choose 5 because our data's x ranges from 0 to 10
         self.root.w = 5
 
+    @staticmethod
+    def create_tree(df) -> [RangeNode, None]:
+        points = []
+        for index, row in df.iterrows():
+            points.append(RangePoint(row['x'], row['y'], data=row['row_id']))
+        return TwoDRangeTree.create_tree_with_points(points)
+
+    @staticmethod
+    def create_tree_with_points(points: [RangePoint]) -> [RangeNode, None]:
+        sorted_points = sorted(points, key=lambda p: p.x)
+        if len(sorted_points) == 2:
+            points = sorted_points
+            node = RangeNode()
+            node.w = (points[0].x + points[1].x) / 2
+            if points[0].x != points[1].x:
+                node.addChild(points[0], 'x')
+                node.addChild(points[1], 'x')
+            else:
+                node.l_child = RangeLeaf(points[0])
+                node.r_child = RangeLeaf(points[1])
+            node.add_all_points(points)
+            node.tree = RangeTree()
+            node.tree.root = RangeTree.create_tree_with_points(node.get_all_points())
+            return node
+        elif len(sorted_points) == 1:
+            point = RangePoint(sorted_points[0].x, sorted_points[0].y, sorted_points[0].data)
+            leaf = RangeLeaf(point)
+            leaf.add_point(point)
+            return leaf
+        elif len(sorted_points) == 0:
+            return None
+        else:
+            node = RangeNode()
+            df_half = int(len(sorted_points) / 2)
+            node.l_child = TwoDRangeTree.create_tree_with_points(sorted_points[0:df_half])
+            node.r_child = TwoDRangeTree.create_tree_with_points(sorted_points[df_half:len(sorted_points)])
+            if node.l_child.isLeaf():
+                lw = node.l_child.range_point.x
+            else:
+                lw = node.l_child.w
+            if node.r_child.isLeaf():
+                rw = node.r_child.range_point.x
+            else:
+                rw = node.r_child.w
+            node.w = (lw + rw) / 2
+            node.add_all_points(node.l_child.points)
+            node.add_all_points(node.r_child.points)
+            node.tree = RangeTree()
+            node.tree.root = RangeTree.create_tree_with_points(node.get_all_points())
+            return node
+
     def insert(self, point: RangePoint):
         if self.root.w is None:
             # self.root.w = point.x + point.x / 2
@@ -42,8 +93,12 @@ class TwoDRangeTree:
                     current_node.l_child = RangeNode()
                     current_node = current_node.l_child
                     current_node.w = (point.x + old_point.x) / 2
-                    current_node.addChild(old_point, 'x')
-                    current_node.addChild(point, 'x')
+                    if old_point.x != point.x:
+                        current_node.addChild(old_point, 'x')
+                        current_node.addChild(point, 'x')
+                    else:
+                        current_node.l_child = RangeLeaf(old_point)
+                        current_node.r_child = RangeLeaf(point)
                     current_node.tree = RangeTree()
                     current_node.tree.insert(point)
                     current_node.tree.insert(old_point)
@@ -58,15 +113,18 @@ class TwoDRangeTree:
                     current_node.r_child = RangeNode()
                     current_node = current_node.r_child
                     current_node.w = (point.x + old_point.x) / 2
-                    current_node.addChild(old_point, 'x')
-                    current_node.addChild(point, 'x')
+                    if old_point.x != point.x:
+                        current_node.addChild(old_point, 'x')
+                        current_node.addChild(point, 'x')
+                    else:
+                        current_node.l_child = RangeLeaf(old_point)
+                        current_node.r_child = RangeLeaf(point)
                     current_node.tree = RangeTree()
                     current_node.tree.insert(point)
                     current_node.tree.insert(old_point)
 
     def query(self, x1, x2, y1, y2):
         split_node, visited_nodes = self.get_split_node(x1, x2)
-        # print(split_node.isLeaf())
         if split_node is None:
             return []
         if split_node.isLeaf():

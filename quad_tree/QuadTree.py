@@ -33,3 +33,14 @@ def run(df, x: quads.Point, k: int):
     print(list2)
     print("_________________")
 
+    # second implementation
+    tree = LocalQuadTree((5, 5), 10, 10)
+    for index, row in df.iterrows():
+        tree.insert(quads.Point(row['x'], row['y'], data=row['row_id']))
+    ts = time.time()
+    list3 = tree.get_nn(x, k)
+    te = time.time()
+    dt = te - ts
+    print(dt)
+    print(list3)
+    print("_________________")

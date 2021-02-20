@@ -3,7 +3,7 @@ from math import sqrt
 
 class RangePoint:
 
-    def __init__(self, x: float, y: float, data: float):
+    def __init__(self, x: float, y: float, data: float = 0):
         self.x = x
         self.y = y
         self.data = data
