@@ -4,6 +4,7 @@ import quads
 from quad_tree import RunQuadTree
 from range_tree import RunRangeTree
 from range_tree.RangePoint import RangePoint
+from Kd_Trees.kdtree import *
 
 
 def read_data():
@@ -13,17 +14,15 @@ def read_data():
 
 
 if __name__ == '__main__':
+    print("Reading data...\n")
     df = read_data()
+    print("Data successfully read.\n")
+    print("Insert K value for the number of nearest neighbours\n")
+    k = int(input())
+    print("Insert D value for the number of Data you want to be included in the search\n")
+    D = int(input())
 
-    N = 10_000
-    k = 5
-    x = 5.1
-    y = 5.1
-
-    print('Quad Tree')
-    RunQuadTree.run(df[0:N], point=quads.Point(x, y), k=k)
-
-    print('2D Range Tree')
-    RunRangeTree.run(df[0:N], point=RangePoint(x, y), k=k)
-
+    RunQuadTree.run(df[0:D], quads.Point(5.1, 5.1), k)
+    RunRangeTree.run(df[0:D], RangePoint(5.1, 5.1, 0), k)
+    run_kd(k, [5.1, 5.1], df[0:D], D)
 

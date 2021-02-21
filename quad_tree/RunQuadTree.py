@@ -16,19 +16,6 @@ def run(df, point: quads.Point, k: int):
     :param point: The point whose nearest neighbors we are looking for.
     :param k: The number of neighbors we want to find.
     """
-    # "local" implementation
-    tree = LocalQuadTree((5, 5), 10, 10)
-    for index, row in df.iterrows():
-        tree.insert(quads.Point(row['x'], row['y'], data=row['row_id']))
-    ts = time.time()
-    list1 = tree.get_knn(point, k)
-    te = time.time()
-    dt = te - ts
-    print('Quad Algorithm')
-    print(round(dt, 6))
-    print(list1)
-    print("_________________")
-
     # library
     tree = quads.QuadTree((5, 5), 10, 10)
     for index, row in df.iterrows():
@@ -37,8 +24,23 @@ def run(df, point: quads.Point, k: int):
     list2 = tree.nearest_neighbors(point, k)
     te = time.time()
     dt = te - ts
-    list2.sort(key=lambda point_in_list: quads.euclidean_compare(point, point_in_list))
-    print('Quad Library')
-    print(round(dt, 6))
+    print("Time for library based algorithm is:")
+    print("%f%s" % (dt, "sec"))
+    print("%i%s" % (k, "(Quad tree) nearest neighbours are:"))
     print(list2)
+    print("_________________")
+
+    # implementation
+    tree = LocalQuadTree((5, 5), 10, 10)
+    for index, row in df.iterrows():
+        tree.insert(quads.Point(row['x'], row['y'], data=row['row_id']))
+    ts = time.time()
+    list3 = tree.get_knn(point, k)
+    te = time.time()
+    dt = te - ts
+    list2.sort(key=lambda point_in_list: quads.euclidean_compare(point, point_in_list))
+    print("Time for our own V2 based algorithm is:")
+    print("%f%s" % (dt, "sec"))
+    print("%i%s" % (k, "our (Quad tree) nearest neighbours are:"))
+    print(list3)
     print("_________________")

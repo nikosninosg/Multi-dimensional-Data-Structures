@@ -1,8 +1,14 @@
 import cProfile
+import time
+
 import pandas as pd
 
 
 # Makes the KD-Tree
+from pandas import DataFrame
+from scipy.spatial import KDTree
+
+
 def make_kd_tree(df_points, dimensions, i=0):
     """
     This method creates a KD tree from a given dataset which is represented as a dataframe. In addition the method
@@ -93,29 +99,35 @@ def dist_sq(a, b, dimension):
     return sum((a[i] - b[i]) ** 2 for i in range(dimension))
 
 
-def dist_sq_dim(a, b):
+def dist_sq_dim(a, b, dim=2):
     return dist_sq(a, b, dim)
 
 
-df = pd.read_csv("../Data/train_x_y_10K.csv")
-points = df.values.tolist()
+def run_kd(k, point, df, D, dim=2):
+    """
+    This is a function that runs the knn algorithms in a KD Tree.
 
-print(points[:10])
+    The function prints both the time needed to run the algorithm and the points returned.
+    The function does not take under consideration the time needed to create the data structure.
 
-result = []
+    :param k: The number of neighbors we want to find.
+    :param point: The point whose nearest neighbors we are looking for.
+    :param df: A pandas dataframe containing the points of the dataset.
+    :param D: The number of elements that we want to use from the dataset passed.
+    :param dim: The dimension of the points.
+    """
+    result = []
+    points_df = df.drop(labels=["row_id"], axis="columns")
+    print("For K-D Tree :")
+    points_df = points_df.values.tolist()
+    points_df = points_df[:D]
+    kd_tree = make_kd_tree(points_df, dim)
 
-print("Type points:", type(points))
-dim = 2
-K = 10
-# point which need to find the K nearest neighbours of this point
-point_k = [5.1, 5.1]
+    ts = time.time()
+    result.append(tuple(get_knn(kd_tree, point, k, dim, dist_sq_dim)))
+    te = time.time()
+    dt = te - ts
+    print("%f%s" % (dt, "sec"))
 
-
-def bench():
-    kd_tree = make_kd_tree(points, dim)
-    result.append(tuple(get_knn(kd_tree, point_k, K, dim, dist_sq_dim)))
-
-
-cProfile.run("bench()")
-
-puts(result[0])
+    for point in result:
+        print(point)
