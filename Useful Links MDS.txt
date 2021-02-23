@@ -1,4 +1,3 @@
-https://github.com/tway24/kdtree
 https://www.kaggle.com/satomacoto/kdtree/data?select=submission.csv
 https://www.kaggle.com/c/facebook-v-predicting-check-ins/data
 https://johnlekberg.com/blog/2020-04-17-kd-tree.html
